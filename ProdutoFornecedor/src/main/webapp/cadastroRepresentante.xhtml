@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<meta charset="UTF-8" />
+</h:head>
+<h:body>
+  <p:link value="Menu" outcome="menu"/>
+	<h:form id="formRepresentante">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Código:" />
+			<p:inputText value="#{representanteManagedBean.representante.codigo}" />
+
+			<p:outputLabel value="Nome:" />
+			<p:inputText  value="#{representanteManagedBean.representante.nome}"/>
+		</p:panelGrid>
+		<p:commandButton value="Salvar" update=":formRepresentante, :formTableRepresentantes"  action="#{representanteManagedBean.salvar}"/>
+	</h:form>
+
+
+    <h1>Representantes Cadastrados</h1>
+	<h:form id="formTableRepresentantes">
+		<p:dataTable value="#{representanteManagedBean.representantes}" var="r"
+			editable="true" id="tableRepresentantes"
+			selectionMode="single" selection="#{representanteManagedBean.representanteSelecionado}"  rowKey="#{r.codigo}"
+			>
+
+
+           	<p:column headerText="Código">
+				<h:outputText value="#{r.codigo}" />
+			</p:column>
+
+			<p:column headerText="Nome: ">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{r.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="modelInput" value="#{r.nome}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:70px" headerText="Opções">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{representanteManagedBean.remove(r)}"
+						update=":formTableRepresentantes" />
+					<p:commandLink id="novoFornecedor" styleClass="ui-icon  ui-icon-circle-plus"
+						style="text-align:center"
+						onclick="PF('dlgAddFornecedor').show();"	
+						update=":formTableRepresentantes, :formPickList"
+						actionListener="#{representanteManagedBean.addFornecedorToRepresentante(r)}"
+						 />	
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+    
+		<p:dialog header="Seleção de Fornecedor" widgetVar="dlgAddFornecedor" modal="true" height="400" width="800">
+    			<h:outputText value="Selecione um ou mais fornecedores" />
+    			<h:form id="formPickList"> 
+    			<p:pickList id="pickListFornecedores" value="#{representanteManagedBean.fornecedores}"  var="f" itemLabel="#{f.nome}" itemValue="#{f}" converter="converterFornecedor" >
+    			 	<f:facet name="sourceCaption">Disponíveis</f:facet>  
+        			<f:facet name="targetCaption">Associados</f:facet>
+        		</p:pickList>
+        		<p:commandButton value="Salvar" action="#{representanteManagedBean.associar}" onclick="dlgAddFornecedor.hide();"/>
+        		</h:form>	
+    	</p:dialog>  
+		
+	
+    <br/>
+
+
+
+</h:body>
+</html>

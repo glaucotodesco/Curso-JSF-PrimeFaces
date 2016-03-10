@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<meta charset="UTF-8" />
+</h:head>
+<h:body>
+  <p:link value="Menu" outcome="menu"/>
+
+    
+	<h:form id="formProdutos">
+
+
+
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Código:" />
+			<p:inputText value="#{produtoManagedBean.produto.codigo}" />
+
+			<p:outputLabel value="Descrição:" />
+			<p:inputText value="#{produtoManagedBean.produto.descricao}" />
+
+			<p:outputLabel value="Fornecedor:" />
+			<p:selectOneMenu value="#{produtoManagedBean.fornecedor}"
+				converter="converterFornecedor">
+				<f:selectItem itemValue="" itemLabel="Selecione um fornecedor" />
+				<f:selectItems value="#{produtoManagedBean.fornecedores}" var="aux"
+					itemValue="#{aux}" itemLabel="#{aux.nome}" />
+			</p:selectOneMenu>
+
+
+			<p:outputLabel value="Valor:" />
+			<p:inputText value="#{produtoManagedBean.produto.valor}" />
+
+
+		</p:panelGrid>
+		<p:commandButton value="Salvar" action="#{produtoManagedBean.salvar}"
+			update=":formProdutos, :formTableProdutos" />
+	</h:form>
+
+    <h1>Produtos Cadastrados</h1>
+	<h:form id="formTableProdutos">
+		<p:dataTable value="#{produtoManagedBean.listaProdutos}" var="prod"
+			editable="true" id="tableProdutos">
+
+			<p:column headerText="Código">
+				<h:outputText value="#{prod.codigo}" />
+			</p:column>
+
+			<p:column headerText="Descrição">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.descricao}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="modelInput" value="#{prod.descricao}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:column headerText="Fornecedor">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{prod.fornecedor.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{prod.fornecedor}"
+							converter="converterFornecedor" style="width:100%">
+							<f:selectItem itemValue="" itemLabel="Selecione um fornecedor" />
+							<f:selectItems value="#{produtoManagedBean.fornecedores}"
+								var="aux" itemValue="#{aux}" itemLabel="#{aux.nome}" />
+						</p:selectOneMenu>
+
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Valor">
+				<h:outputText value="#{prod.valor}" />
+			</p:column>
+
+			<p:column style="width:70px" headerText="Opções">
+
+
+
+					<p:rowEditor />
+					
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{produtoManagedBean.remove(prod)}"
+						update=":formTableProdutos" />
+
+
+
+			</p:column>
+
+
+
+
+
+
+		</p:dataTable>
+	</h:form>
+
+
+
+
+
+
+
+
+
+</h:body>
+</html>

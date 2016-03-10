@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+	<meta charset="UTF-8" />
+</h:head>
+<h:body>
+  <p:link value="Menu" outcome="menu"/>
+	<h:form id="formFornecedores">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Código:" />
+			<p:inputText value="#{fornecedorManagedBean.fornecedor.codigo}" />
+
+			<p:outputLabel value="Nome:" />
+			<p:inputText  value="#{fornecedorManagedBean.fornecedor.nome}"/>
+		</p:panelGrid>
+		<p:commandButton value="Salvar" update=":formFornecedores, :formTableFornecedores"  action="#{fornecedorManagedBean.salvar}"/>
+	</h:form>
+
+
+    <h1>Fornecedores Cadastrados</h1>
+	<h:form id="formTableFornecedores">
+		<p:dataTable value="#{fornecedorManagedBean.fornecedores}" var="f"
+			editable="true" id="tableProdutos"
+			selectionMode="single" selection="#{fornecedorManagedBean.fornecedorSelecionado}"  rowKey="#{f.codigo}"
+			>
+
+
+           <p:ajax event="rowSelect"   listener="#{fornecedorManagedBean.onRowSelect}" update=":formTableProdutos" />
+           <p:ajax event="rowUnselect" listener="#{fornecedorManagedBean.onRowUnselect}" update=":formTableProdutos" />
+
+			<p:column headerText="Código">
+				<h:outputText value="#{f.codigo}" />
+			</p:column>
+
+			<p:column headerText="Nome: ">
+				<p:cellEditor>
+					<f:facet name="output">
+						<p:outputLabel value="#{f.nome}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText id="modelInput" value="#{f.nome}"
+							style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
+			</p:column>
+
+			<p:column style="width:70px" headerText="Opções">
+					<p:rowEditor />
+					<p:commandLink id="remover" styleClass="ui-icon ui-icon-trash"
+						style="text-align:center"
+						actionListener="#{fornecedorManagedBean.remove(f)}"
+						update=":formTableFornecedores" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+    <br/>
+    <h:form id="formTableProdutos">
+	    <p:outputLabel value="Produtos do fornecedor: #{fornecedorManagedBean.fornecedorSelecionado.nome}" />
+		<p:dataTable value="#{fornecedorManagedBean.produtosFornecedor}" var="prod"	id="tableProdutos">
+
+			<p:column headerText="Código">
+				<h:outputText value="#{prod.codigo}" />
+			</p:column>
+
+			<p:column headerText="Descrição">
+						<p:outputLabel value="#{prod.descricao}" />
+			</p:column>
+
+			<p:column headerText="Valor">
+				<h:outputText value="#{prod.valor}" />
+			</p:column>
+
+		</p:dataTable>
+	</h:form>
+
+
+
+
+
+
+
+
+
+</h:body>
+</html>
